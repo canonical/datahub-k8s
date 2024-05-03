@@ -27,17 +27,6 @@ elasticsearch:
       cpu: "1000m"
       memory: "1024M"
 
-  # # Request smaller persistent volumes.
-  # volumeClaimTemplate:
-  #   accessModes: ["ReadWriteOnce"]
-  #   storageClassName: "standard"
-  #   resources:
-  #     requests:
-  #       storage: 100M
-
-# Official neo4j chart, supports both community and enterprise editions
-# see https://neo4j.com/docs/operations-manual/current/kubernetes/ for more information
-# source: https://github.com/neo4j/helm-charts
 neo4j:
   enabled: false
   nameOverride: neo4j
@@ -75,7 +64,7 @@ neo4j:
     NEO4J_PLUGINS: '["apoc"]'
 
 mysql:
-  enabled: true
+  enabled: false
   auth:
     # For better security, add mysql-secrets k8s secret with mysql-root-password, mysql-replication-password and mysql-password
     existingSecret: mysql-secrets
@@ -83,7 +72,7 @@ mysql:
     extraFlags: "--character-set-server=utf8mb4 --collation-server=utf8mb4_bin"
 
 postgresql:
-  enabled: false
+  enabled: true
   auth:
     # For better security, add postgresql-secrets k8s secret with postgres-password, replication-password and password
     existingSecret: postgresql-secrets
