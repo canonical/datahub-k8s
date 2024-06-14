@@ -6,6 +6,7 @@ datahub-gms:
     repository: acryldata/datahub-gms
   resources:
     limits:
+      cpu: 1000m
       memory: 2Gi
     requests:
       cpu: 100m
@@ -18,13 +19,18 @@ datahub-gms:
     initialDelaySeconds: 120
     periodSeconds: 30
     failureThreshold: 8
+  podAnnotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "4318"
  
 datahub-frontend:
   enabled: true
   image:
     repository: acryldata/datahub-frontend-react
+    tag: "v0.13.2"
   resources:
     limits:
+      cpu: 1000m
       memory: 1400Mi
     requests:
       cpu: 100m
@@ -34,6 +40,9 @@ datahub-frontend:
   defaultUserCredentials: {}
   service:
     extraLabels: {}
+  podAnnotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "4318"
   extraEnvs:
     - name: AUTH_OIDC_ENABLED
       value: "false"
@@ -63,7 +72,8 @@ acryl-datahub-actions:
     tag: "v0.0.15"
   resources:
     limits:
-      memory: 512Mi
+      cpu: 500m
+      memory: 2Gi
     requests:
       cpu: 300m
       memory: 256Mi
@@ -73,6 +83,7 @@ datahub-mae-consumer:
     repository: acryldata/datahub-mae-consumer
   resources:
     limits:
+      cpu: 500m
       memory: 1536Mi
     requests:
       cpu: 100m
@@ -83,6 +94,7 @@ datahub-mce-consumer:
     repository: acryldata/datahub-mce-consumer
   resources:
     limits:
+      cpu: 500m
       memory: 1536Mi
     requests:
       cpu: 100m
@@ -187,7 +199,7 @@ postgresqlSetupJob:
 
 ## No code data migration
 datahubUpgrade:
-  enabled: false
+  enabled: true
   image:
     repository: acryldata/datahub-upgrade
   batchSize: 1000
@@ -265,11 +277,11 @@ datahubSystemUpdate:
 global:
   strict_mode: true
   graph_service_impl: elasticsearch
-  datahub_analytics_enabled: true
+  datahub_analytics_enabled: false
   datahub_standalone_consumers_enabled: false
 
   elasticsearch:
-    host: "elasticsearch-master"
+    host: "opensearch-cluster-master"
     port: "9200"
     skipcheck: "false"
     insecure: "false"
@@ -414,16 +426,7 @@ global:
       stopContainerOnDeserializationError: true
     schemaregistry:
       type: INTERNAL
-      # Confluent Kafka Implementation
-      # type: KAFKA
-      # url: "http://prerequisites-cp-schema-registry:8081"
-
-      # Glue Implementation - `url` not applicable
-      # type: AWS_GLUE
-      # glue:
-      #   region: us-east-1
-      #   registry: datahub
-
+      
   neo4j:
     host: "prerequisites-neo4j:7474"
     uri: "bolt://prerequisites-neo4j"
