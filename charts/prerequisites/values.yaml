@@ -2,7 +2,7 @@
 # Copy this file and update to the configuration of choice
 elasticsearch:
   # set this to false, if you want to provide your own ES instance.
-  enabled: true
+  enabled: false
 
   # If you're running in production, set this to 3 and comment out antiAffinity below
   # Or alternatively if you're running production, bring your own ElasticSearch
@@ -73,6 +73,18 @@ mysql:
 
 postgresql:
   enabled: true
+  primary:
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 2Gi
+    persistence:
+      storageClass: "cdk-cinder"
+      size: 30Gi
+    livenessProbe:
+      initialDelaySeconds: 60
+      periodSeconds: 30
+      timeoutSeconds: 15
   auth:
     # For better security, add postgresql-secrets k8s secret with postgres-password, replication-password and password
     existingSecret: postgresql-secrets
@@ -133,7 +145,15 @@ kafka:
   controller:
     replicaCount: 0
   broker:
-    replicaCount: 1
+    resourcesPreset: "small"
+    replicaCount: 3
+    persistence:
+      storageClass: "cdk-cinder"
+      size: 30Gi
+    livenessProbe:
+      initialDelaySeconds: 60
+      periodSeconds: 30
+      timeoutSeconds: 15
     # The new minId for broker is 100. If we don't override this, the broker will have id 100
     # and cannot load the partitions. So we set minId to 0 to be backwards compatible
     minId: 0
@@ -149,3 +169,12 @@ kafka:
     enabled: false
   zookeeper:
     enabled: true
+    resourcesPreset: "small"
+    replicaCount: 3
+    persistence:
+      storageClass: "cdk-cinder"
+      size: 30Gi
+    livenessProbe:
+      initialDelaySeconds: 60
+      periodSeconds: 30
+      timeoutSeconds: 15
