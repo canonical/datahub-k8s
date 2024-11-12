@@ -4,6 +4,7 @@ datahub-gms:
   enabled: true
   image:
     repository: acryldata/datahub-gms
+    tag: "v0.13.2"
   resources:
     limits:
       cpu: 1000m
@@ -91,18 +92,6 @@ acryl-datahub-actions:
     requests:
       cpu: 300m
       memory: 256Mi
-        # extraEnvs:
-        #   - name: HTTP_PROXY_HOST
-        #     value: squid.internal
-        #   - name: HTTP_PROXY_PORT
-        #     value: "3128"
-        #   - name: HTTPS_PROXY_HOST
-        #     value: squid.internal
-        #   - name: HTTPS_PROXY_PORT
-        #     value: "3128"
-        #   - name: HTTP_NON_PROXY_HOSTS
-        #     value: "localhost|datahub-datahub-gms"
-
 
 datahub-mae-consumer:
   image:
